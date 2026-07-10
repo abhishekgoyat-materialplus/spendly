@@ -1,10 +1,20 @@
 import os
+from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db, seed_db
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-in-production")
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("user_id"):
+            return redirect(url_for("login", next=request.path))
+        return f(*args, **kwargs)
+    return decorated
 
 with app.app_context():
     init_db()
@@ -22,6 +32,8 @@ def landing():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if session.get("user_id"):
+        return redirect(url_for("landing"))
     if request.method == "POST":
         name = request.form["name"].strip()
         email = request.form["email"].strip().lower()
@@ -54,6 +66,8 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get("user_id"):
+        return redirect(url_for("landing"))
     if request.method == "POST":
         email = request.form["email"].strip().lower()
         password = request.form["password"]
@@ -67,7 +81,10 @@ def login():
 
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
-        return redirect(url_for("landing"))
+        next_url = request.form.get("next", "")
+        if not next_url.startswith("/"):
+            next_url = url_for("landing")
+        return redirect(next_url)
 
     return render_template("login.html")
 
@@ -93,21 +110,25 @@ def logout():
 
 
 @app.route("/profile")
+@login_required
 def profile():
     return "Profile page — coming in Step 4"
 
 
 @app.route("/expenses/add")
+@login_required
 def add_expense():
     return "Add expense — coming in Step 7"
 
 
 @app.route("/expenses/<int:id>/edit")
+@login_required
 def edit_expense(id):
     return "Edit expense — coming in Step 8"
 
 
 @app.route("/expenses/<int:id>/delete")
+@login_required
 def delete_expense(id):
     return "Delete expense — coming in Step 9"
 
