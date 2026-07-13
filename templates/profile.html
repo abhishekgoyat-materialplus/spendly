@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  {# User info card #}
+  <div class="profile-header">
+    <div class="profile-avatar">{{ user.initials }}</div>
+    <div class="profile-info">
+      <div class="profile-name">{{ user.name }}</div>
+      <div class="profile-email">{{ user.email }}</div>
+      <div class="profile-since">Member since {{ user.member_since }}</div>
+    </div>
+  </div>
+
+  {# Summary stats #}
+  <div class="profile-stats">
+    <div class="profile-stat">
+      <div class="profile-stat-label">Total Spent</div>
+      <div class="profile-stat-value">{{ stats.total_spent }}</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-label">Transactions</div>
+      <div class="profile-stat-value profile-stat-value--plain">{{ stats.transactions }}</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-label">Top Category</div>
+      <div class="profile-stat-value profile-stat-value--plain profile-stat-value--sm">{{ stats.top_category }}</div>
+    </div>
+  </div>
+
+  {# Transaction history #}
+  <div class="profile-card">
+    <div class="profile-section-title">Recent Transactions</div>
+    <div class="profile-table-wrap">
+      <table class="profile-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in transactions %}
+          <tr>
+            <td class="tx-date">{{ tx.date }}</td>
+            <td>{{ tx.description }}</td>
+            <td>
+              <span class="cat-badge cat-badge--{{ tx.category | lower }}">{{ tx.category }}</span>
+            </td>
+            <td class="tx-amount">{{ tx.amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {# Category breakdown #}
+  <div class="profile-card">
+    <div class="profile-section-title">Category Breakdown</div>
+    <div class="profile-breakdown">
+      {% for item in breakdown %}
+      <div class="profile-breakdown-row">
+        <div class="profile-breakdown-cat">{{ item.category }}</div>
+        <div class="profile-bar-track">
+          <div class="profile-bar profile-bar--{{ item.category | lower }}"
+               style="width: {{ item.pct }}%"></div>
+        </div>
+        <div class="profile-breakdown-amt">{{ item.amount }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
