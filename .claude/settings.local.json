@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/abhishek.goyat/.claude/plugins/cache/agents-observe/agents-observe/0.9.11/skills/observe/**)",
+      "Bash(scripts/cli.sh start *)"
+    ]
+  }
+}
