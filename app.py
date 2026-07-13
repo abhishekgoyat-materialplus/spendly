@@ -3,6 +3,10 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db, seed_db
+from database.queries import (
+    get_user_by_id, get_summary_stats,
+    get_recent_transactions, get_category_breakdown,
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-in-production")
@@ -114,36 +118,17 @@ def logout():
 @app.route("/profile")
 @login_required
 def profile():
-    user = {
-        "name": "Demo User",
-        "email": "demo@spendly.com",
-        "initials": "DU",
-        "member_since": "July 2026",
-    }
-    stats = {
-        "total_spent": "₹6,020",
-        "transactions": 8,
-        "top_category": "Shopping",
-    }
-    transactions = [
-        {"date": "Jul 10", "description": "Clothes",             "category": "Shopping",      "amount": "₹2,200"},
-        {"date": "Jul 03", "description": "Electricity bill",    "category": "Bills",         "amount": "₹1,800"},
-        {"date": "Jul 05", "description": "Pharmacy",            "category": "Health",        "amount": "₹600"},
-        {"date": "Jul 01", "description": "Grocery run",         "category": "Food",          "amount": "₹450"},
-        {"date": "Jul 09", "description": "Restaurant dinner",   "category": "Food",          "amount": "₹320"},
-        {"date": "Jul 07", "description": "Movie tickets",       "category": "Entertainment", "amount": "₹350"},
-        {"date": "Jul 10", "description": "Miscellaneous",       "category": "Other",         "amount": "₹180"},
-        {"date": "Jul 02", "description": "Metro card recharge", "category": "Transport",     "amount": "₹120"},
-    ]
-    breakdown = [
-        {"category": "Shopping",      "amount": "₹2,200", "pct": 37},
-        {"category": "Bills",         "amount": "₹1,800", "pct": 30},
-        {"category": "Food",          "amount": "₹770",   "pct": 13},
-        {"category": "Health",        "amount": "₹600",   "pct": 10},
-        {"category": "Entertainment", "amount": "₹350",   "pct": 6},
-        {"category": "Other",         "amount": "₹180",   "pct": 3},
-        {"category": "Transport",     "amount": "₹120",   "pct": 2},
-    ]
+    user_id = session["user_id"]
+
+    user_row = get_user_by_id(user_id)
+    words = user_row["name"].split()
+    initials = (words[0][0] + (words[-1][0] if len(words) > 1 else "")).upper()
+    user = {**user_row, "initials": initials}
+
+    stats        = get_summary_stats(user_id)
+    transactions = get_recent_transactions(user_id)
+    breakdown    = get_category_breakdown(user_id)
+
     return render_template("profile.html", user=user, stats=stats,
                            transactions=transactions, breakdown=breakdown)
 
