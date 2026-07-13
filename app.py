@@ -27,6 +27,8 @@ with app.app_context():
 
 @app.route("/")
 def landing():
+    if session.get("user_id"):
+        return redirect(url_for("profile"))
     return render_template("landing.html")
 
 
@@ -59,7 +61,7 @@ def register():
 
         session["user_id"] = user_id
         session["user_name"] = name
-        return redirect(url_for("landing"))
+        return redirect(url_for("profile"))
 
     return render_template("register.html")
 
@@ -83,7 +85,7 @@ def login():
         session["user_name"] = user["name"]
         next_url = request.form.get("next", "")
         if not next_url.startswith("/"):
-            next_url = url_for("landing")
+            next_url = url_for("profile")
         return redirect(next_url)
 
     return render_template("login.html")
@@ -112,7 +114,38 @@ def logout():
 @app.route("/profile")
 @login_required
 def profile():
-    return "Profile page — coming in Step 4"
+    user = {
+        "name": "Demo User",
+        "email": "demo@spendly.com",
+        "initials": "DU",
+        "member_since": "July 2026",
+    }
+    stats = {
+        "total_spent": "₹6,020",
+        "transactions": 8,
+        "top_category": "Shopping",
+    }
+    transactions = [
+        {"date": "Jul 10", "description": "Clothes",             "category": "Shopping",      "amount": "₹2,200"},
+        {"date": "Jul 03", "description": "Electricity bill",    "category": "Bills",         "amount": "₹1,800"},
+        {"date": "Jul 05", "description": "Pharmacy",            "category": "Health",        "amount": "₹600"},
+        {"date": "Jul 01", "description": "Grocery run",         "category": "Food",          "amount": "₹450"},
+        {"date": "Jul 09", "description": "Restaurant dinner",   "category": "Food",          "amount": "₹320"},
+        {"date": "Jul 07", "description": "Movie tickets",       "category": "Entertainment", "amount": "₹350"},
+        {"date": "Jul 10", "description": "Miscellaneous",       "category": "Other",         "amount": "₹180"},
+        {"date": "Jul 02", "description": "Metro card recharge", "category": "Transport",     "amount": "₹120"},
+    ]
+    breakdown = [
+        {"category": "Shopping",      "amount": "₹2,200", "pct": 37},
+        {"category": "Bills",         "amount": "₹1,800", "pct": 30},
+        {"category": "Food",          "amount": "₹770",   "pct": 13},
+        {"category": "Health",        "amount": "₹600",   "pct": 10},
+        {"category": "Entertainment", "amount": "₹350",   "pct": 6},
+        {"category": "Other",         "amount": "₹180",   "pct": 3},
+        {"category": "Transport",     "amount": "₹120",   "pct": 2},
+    ]
+    return render_template("profile.html", user=user, stats=stats,
+                           transactions=transactions, breakdown=breakdown)
 
 
 @app.route("/expenses/add")
