@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,6 +8,7 @@ from database.db import get_db, init_db, seed_db
 from database.queries import (
     get_user_by_id, get_summary_stats,
     get_recent_transactions, get_category_breakdown,
+    insert_expense,
 )
 
 app = Flask(__name__)
@@ -150,10 +152,48 @@ def analytics():
     return render_template("analytics.html")
 
 
-@app.route("/expenses/add")
+VALID_CATEGORIES = {"Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"}
+
+@app.route("/expenses/add", methods=["GET", "POST"])
 @login_required
 def add_expense():
-    return "Add expense — coming in Step 7"
+    if request.method == "GET":
+        return render_template("add_expense.html")
+
+    amount_raw  = request.form.get("amount", "").strip()
+    category    = request.form.get("category", "")
+    date_raw    = request.form.get("date", "").strip()
+    description = request.form.get("description", "").strip() or None
+
+    error  = None
+    amount = None
+
+    try:
+        amount = float(amount_raw)
+        if amount <= 0:
+            raise ValueError
+    except ValueError:
+        error = "Amount must be a positive number."
+
+    if not error and category not in VALID_CATEGORIES:
+        error = "Please select a valid category."
+
+    if not error:
+        if not _DATE_RE.match(date_raw):
+            error = "Date must be in YYYY-MM-DD format."
+        else:
+            try:
+                datetime.strptime(date_raw, "%Y-%m-%d")
+            except ValueError:
+                error = "Date must be in YYYY-MM-DD format."
+
+    if error:
+        return render_template("add_expense.html", error=error,
+                               amount=amount_raw, category=category,
+                               date=date_raw, description=description or "")
+
+    insert_expense(session["user_id"], amount, category, date_raw, description)
+    return redirect(url_for("profile"))
 
 
 @app.route("/expenses/<int:id>/edit")
