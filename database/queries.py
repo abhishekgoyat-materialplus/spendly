@@ -119,3 +119,15 @@ def get_category_breakdown(user_id, date_from=None, date_to=None):
     items[0]["pct"] += remainder
 
     return items
+
+
+def insert_expense(user_id, amount, category, date, description):
+    db = get_db()
+    try:
+        db.execute(
+            "INSERT INTO expenses (user_id, amount, category, date, description) VALUES (?, ?, ?, ?, ?)",
+            (user_id, amount, category, date, description),
+        )
+        db.commit()
+    finally:
+        db.close()
