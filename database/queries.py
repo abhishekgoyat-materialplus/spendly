@@ -64,7 +64,7 @@ def get_recent_transactions(user_id, date_from=None, date_to=None, limit=10):
     try:
         date_conds, date_params = _date_conditions(date_from, date_to)
         where = " AND ".join(["user_id = ?"] + date_conds)
-        base = "SELECT date, description, category, amount FROM expenses WHERE "
+        base = "SELECT id, date, description, category, amount FROM expenses WHERE "
         if date_from or date_to:
             # Date range active — return all matching rows, no cap
             sql = base + where + " ORDER BY date DESC"
@@ -79,12 +79,15 @@ def get_recent_transactions(user_id, date_from=None, date_to=None, limit=10):
     result = []
     for r in rows:
         dt = datetime.strptime(r["date"], "%Y-%m-%d")
-        result.append({
-            "date": f"{dt.strftime('%b')} {dt.day}",
-            "description": r["description"],
-            "category": r["category"],
-            "amount": f"₹{r['amount']:,.0f}",
-        })
+        result.append(
+            {
+                "id": r["id"],
+                "date": f"{dt.strftime('%b')} {dt.day}",
+                "description": r["description"],
+                "category": r["category"],
+                "amount": f"₹{r['amount']:,.0f}",
+            }
+        )
     return result
 
 
@@ -95,7 +98,8 @@ def get_category_breakdown(user_id, date_from=None, date_to=None):
         where = " AND ".join(["user_id = ?"] + date_conds)
         rows = db.execute(
             "SELECT category, SUM(amount) AS total FROM expenses WHERE "
-            + where + " GROUP BY category ORDER BY total DESC",
+            + where
+            + " GROUP BY category ORDER BY total DESC",
             [user_id] + date_params,
         ).fetchall()
     finally:
@@ -119,6 +123,32 @@ def get_category_breakdown(user_id, date_from=None, date_to=None):
     items[0]["pct"] += remainder
 
     return items
+
+
+def get_expense_by_id(expense_id, user_id):
+    db = get_db()
+    try:
+        row = db.execute(
+            "SELECT id, user_id, amount, category, date, description "
+            "FROM expenses WHERE id = ? AND user_id = ?",
+            (expense_id, user_id),
+        ).fetchone()
+        return dict(row) if row else None
+    finally:
+        db.close()
+
+
+def update_expense(expense_id, user_id, amount, category, date, description):
+    db = get_db()
+    try:
+        db.execute(
+            "UPDATE expenses SET amount=?, category=?, date=?, description=? "
+            "WHERE id=? AND user_id=?",
+            (amount, category, date, description, expense_id, user_id),
+        )
+        db.commit()
+    finally:
+        db.close()
 
 
 def insert_expense(user_id, amount, category, date, description):
