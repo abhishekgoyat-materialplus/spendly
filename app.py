@@ -1,4 +1,5 @@
 import os
+import re
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +11,12 @@ from database.queries import (
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-in-production")
+
+_DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+
+def _safe_date(val):
+    value = (val or "").strip()
+    return value if _DATE_RE.match(value) else None
 
 
 def login_required(f):
@@ -120,17 +127,21 @@ def logout():
 def profile():
     user_id = session["user_id"]
 
+    date_from = _safe_date(request.args.get("from"))
+    date_to = _safe_date(request.args.get("to"))
+
     user_row = get_user_by_id(user_id)
     words = user_row["name"].split()
     initials = (words[0][0] + (words[-1][0] if len(words) > 1 else "")).upper()
     user = {**user_row, "initials": initials}
 
-    stats        = get_summary_stats(user_id)
-    transactions = get_recent_transactions(user_id)
-    breakdown    = get_category_breakdown(user_id)
+    stats        = get_summary_stats(user_id, date_from, date_to)
+    transactions = get_recent_transactions(user_id, date_from, date_to)
+    breakdown    = get_category_breakdown(user_id, date_from, date_to)
 
     return render_template("profile.html", user=user, stats=stats,
-                           transactions=transactions, breakdown=breakdown)
+                           transactions=transactions, breakdown=breakdown,
+                           date_from=date_from or "", date_to=date_to or "")
 
 
 @app.route("/expenses/add")

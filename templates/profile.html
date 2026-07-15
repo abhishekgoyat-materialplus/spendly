@@ -14,6 +14,22 @@
     </div>
   </div>
 
+  {# Date filter bar #}
+  <form class="date-filter" method="get" action="{{ url_for('profile') }}" id="filter-form">
+    <div class="date-filter-presets">
+      <button type="button" class="filter-chip" data-preset="all">All Time</button>
+      <button type="button" class="filter-chip" data-preset="month">This Month</button>
+      <button type="button" class="filter-chip" data-preset="3months">Last 3 Months</button>
+      <button type="button" class="filter-chip" data-preset="year">This Year</button>
+    </div>
+    <div class="date-filter-custom">
+      <input type="date" name="from" id="filter-from" value="{{ date_from }}" class="date-input">
+      <span class="date-filter-sep">to</span>
+      <input type="date" name="to" id="filter-to" value="{{ date_to }}" class="date-input">
+      <button type="submit" class="filter-apply-btn">Apply</button>
+    </div>
+  </form>
+
   {# Summary stats #}
   <div class="profile-stats">
     <div class="profile-stat">
