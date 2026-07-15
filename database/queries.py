@@ -142,8 +142,8 @@ def update_expense(expense_id, user_id, amount, category, date, description):
     db = get_db()
     try:
         db.execute(
-            "UPDATE expenses SET amount=?, category=?, date=?, description=? "
-            "WHERE id=? AND user_id=?",
+            "UPDATE expenses SET amount = ?, category = ?, date = ?, description = ? "
+            "WHERE id = ? AND user_id = ?",
             (amount, category, date, description, expense_id, user_id),
         )
         db.commit()

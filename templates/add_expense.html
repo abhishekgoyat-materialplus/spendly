@@ -30,7 +30,7 @@
                     <label for="category">Category</label>
                     <select id="category" name="category" class="form-input" required>
                         <option value="" disabled {{ 'selected' if not category else '' }}>Select a category</option>
-                        {% for cat in ["Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"] %}
+                        {% for cat in categories %}
                         <option value="{{ cat }}" {{ 'selected' if category == cat else '' }}>{{ cat }}</option>
                         {% endfor %}
                     </select>

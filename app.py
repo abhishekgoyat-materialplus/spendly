@@ -173,7 +173,7 @@ def analytics():
     return render_template("analytics.html")
 
 
-VALID_CATEGORIES = {
+VALID_CATEGORIES = [
     "Food",
     "Transport",
     "Bills",
@@ -181,15 +181,10 @@ VALID_CATEGORIES = {
     "Entertainment",
     "Shopping",
     "Other",
-}
+]
 
 
-@app.route("/expenses/add", methods=["GET", "POST"])
-@login_required
-def add_expense():
-    if request.method == "GET":
-        return render_template("add_expense.html")
-
+def _parse_expense_form():
     amount_raw = request.form.get("amount", "").strip()
     category = request.form.get("category", "")
     date_raw = request.form.get("date", "").strip()
@@ -217,9 +212,24 @@ def add_expense():
             except ValueError:
                 error = "Date must be in YYYY-MM-DD format."
 
+    if not error and description and len(description) > 200:
+        error = "Description must be 200 characters or fewer."
+
+    return amount_raw, amount, category, date_raw, description, error
+
+
+@app.route("/expenses/add", methods=["GET", "POST"])
+@login_required
+def add_expense():
+    if request.method == "GET":
+        return render_template("add_expense.html", categories=VALID_CATEGORIES)
+
+    amount_raw, amount, category, date_raw, description, error = _parse_expense_form()
+
     if error:
         return render_template(
             "add_expense.html",
+            categories=VALID_CATEGORIES,
             error=error,
             amount=amount_raw,
             category=category,
@@ -240,40 +250,24 @@ def edit_expense(id):
         abort(404)
 
     if request.method == "GET":
-        return render_template("edit_expense.html", expense=expense)
+        return render_template(
+            "edit_expense.html",
+            expense=expense,
+            categories=VALID_CATEGORIES,
+            amount=expense["amount"],
+            category=expense["category"],
+            date=expense["date"],
+            description=expense["description"] or "",
+        )
 
-    amount_raw = request.form.get("amount", "").strip()
-    category = request.form.get("category", "")
-    date_raw = request.form.get("date", "").strip()
-    description = request.form.get("description", "").strip() or None
-
-    error = None
-    amount = None
-
-    try:
-        amount = float(amount_raw)
-        if amount <= 0:
-            raise ValueError
-    except ValueError:
-        error = "Amount must be a positive number."
-
-    if not error and category not in VALID_CATEGORIES:
-        error = "Please select a valid category."
-
-    if not error:
-        if not _DATE_RE.match(date_raw):
-            error = "Date must be in YYYY-MM-DD format."
-        else:
-            try:
-                datetime.strptime(date_raw, "%Y-%m-%d")
-            except ValueError:
-                error = "Date must be in YYYY-MM-DD format."
+    amount_raw, amount, category, date_raw, description, error = _parse_expense_form()
 
     if error:
         return render_template(
             "edit_expense.html",
             error=error,
             expense=expense,
+            categories=VALID_CATEGORIES,
             amount=amount_raw,
             category=category,
             date=date_raw,
