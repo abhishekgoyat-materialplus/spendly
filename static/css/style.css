@@ -1022,3 +1022,95 @@ a { color: inherit; text-decoration: none; }
     .profile-stats   { grid-template-columns: 1fr; }
     .profile-breakdown-row { grid-template-columns: 90px 1fr 70px; }
 }
+
+/* ── Date filter bar ── */
+
+.date-filter {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.date-filter-presets {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink-muted);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.filter-chip:hover {
+    background: var(--accent-light);
+    color: var(--accent);
+    border-color: var(--accent-light);
+}
+
+.filter-chip--active {
+    background: var(--accent);
+    color: var(--paper-card);
+    border-color: var(--accent);
+}
+
+.date-filter-custom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.date-filter-sep {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+}
+
+.date-input {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.filter-apply-btn {
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--paper-card);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.filter-apply-btn:hover { opacity: 0.85; }
+
+@media (max-width: 700px) {
+    .date-filter        { flex-direction: column; align-items: flex-start; }
+    .date-filter-custom { margin-left: 0; flex-wrap: wrap; }
+}
