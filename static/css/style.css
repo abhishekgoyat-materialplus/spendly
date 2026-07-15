@@ -794,6 +794,197 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ------------------------------------------------------------------ */
+/* Navbar active link                                                  */
+/* ------------------------------------------------------------------ */
+
+.nav-link-active {
+    color: var(--ink) !important;
+    font-weight: 600;
+    position: relative;
+}
+
+.nav-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Coming Soon page                                                     */
+/* ------------------------------------------------------------------ */
+
+.coming-soon-section {
+    min-height: calc(100vh - 60px - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+}
+
+.coming-soon-inner {
+    max-width: 620px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.coming-soon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid #c8dece;
+    border-radius: 999px;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.coming-soon-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.coming-soon-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.coming-soon-title-accent {
+    display: block;
+    color: var(--accent);
+    font-style: italic;
+}
+
+.coming-soon-subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-muted);
+    line-height: 1.75;
+    max-width: 480px;
+}
+
+/* Decorative chart preview */
+.coming-soon-preview {
+    width: 100%;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 2rem;
+    margin-top: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.6;
+}
+
+.cs-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cs-preview-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.cs-preview-period {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+}
+
+.cs-chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    height: 120px;
+    margin-bottom: 1.25rem;
+}
+
+.cs-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+.cs-bar-track {
+    flex: 1;
+    width: 100%;
+    background: var(--border-soft);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.cs-bar {
+    width: 100%;
+    background: var(--accent);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: height 0.6s ease;
+}
+
+.cs-bar--2 { background: var(--accent-2); }
+.cs-bar--3 { background: #5b7fa6; }
+
+.cs-bar-label {
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+}
+
+.cs-preview-features {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cs-feature-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--paper);
+}
+
+.cs-feature-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.cs-feature-dot--green  { background: var(--accent); }
+.cs-feature-dot--amber  { background: var(--accent-2); }
+.cs-feature-dot--purple { background: #7c6fcd; }
+
+/* ------------------------------------------------------------------ */
 /* Profile page                                                        */
 /* ------------------------------------------------------------------ */
 

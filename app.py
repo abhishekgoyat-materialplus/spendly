@@ -144,6 +144,12 @@ def profile():
                            date_from=date_from or "", date_to=date_to or "")
 
 
+@app.route("/analytics")
+@login_required
+def analytics():
+    return render_template("analytics.html")
+
+
 @app.route("/expenses/add")
 @login_required
 def add_expense():

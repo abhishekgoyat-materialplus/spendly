@@ -2,7 +2,18 @@
   "permissions": {
     "allow": [
       "Read(//Users/abhishek.goyat/.claude/plugins/cache/agents-observe/agents-observe/0.9.11/skills/observe/**)",
-      "Bash(scripts/cli.sh start *)"
+      "Bash(scripts/cli.sh start *)",
+      "mcp__database__list_tables",
+      "mcp__database__describe_table",
+      "mcp__database__read_query",
+      "mcp__github__get_me",
+      "mcp__github__search_repositories",
+      "mcp__github__list_issues",
+      "mcp__github__list_pull_requests",
+      "mcp__github__pull_request_read"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "github"
+  ]
 }

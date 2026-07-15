@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics — Spendly{% endblock %}
+
+{% block content %}
+<section class="coming-soon-section">
+    <div class="coming-soon-inner">
+
+        <div class="coming-soon-badge">
+            <span class="coming-soon-dot"></span>
+            Coming Soon
+        </div>
+
+        <h1 class="coming-soon-title">
+            Analytics
+            <span class="coming-soon-title-accent">for your money</span>
+        </h1>
+
+        <p class="coming-soon-subtitle">
+            We're building powerful insights — spending trends, monthly comparisons,
+            category breakdowns, and more. Check back soon.
+        </p>
+
+        <a href="{{ url_for('profile') }}" class="btn-primary">Back to Dashboard</a>
+
+        <!-- Decorative chart mockup -->
+        <div class="coming-soon-preview">
+            <div class="cs-preview-header">
+                <span class="cs-preview-label">Spending Overview</span>
+                <span class="cs-preview-period">Last 6 months</span>
+            </div>
+            <div class="cs-chart-bars">
+                <div class="cs-bar-col">
+                    <div class="cs-bar-track">
+                        <div class="cs-bar" style="height: 45%;"></div>
+                    </div>
+                    <span class="cs-bar-label">Feb</span>
+                </div>
+                <div class="cs-bar-col">
+                    <div class="cs-bar-track">
+                        <div class="cs-bar cs-bar--2" style="height: 68%;"></div>
+                    </div>
+                    <span class="cs-bar-label">Mar</span>
+                </div>
+                <div class="cs-bar-col">
+                    <div class="cs-bar-track">
+                        <div class="cs-bar cs-bar--3" style="height: 52%;"></div>
+                    </div>
+                    <span class="cs-bar-label">Apr</span>
+                </div>
+                <div class="cs-bar-col">
+                    <div class="cs-bar-track">
+                        <div class="cs-bar" style="height: 80%;"></div>
+                    </div>
+                    <span class="cs-bar-label">May</span>
+                </div>
+                <div class="cs-bar-col">
+                    <div class="cs-bar-track">
+                        <div class="cs-bar cs-bar--2" style="height: 60%;"></div>
+                    </div>
+                    <span class="cs-bar-label">Jun</span>
+                </div>
+                <div class="cs-bar-col">
+                    <div class="cs-bar-track">
+                        <div class="cs-bar cs-bar--3" style="height: 35%;"></div>
+                    </div>
+                    <span class="cs-bar-label">Jul</span>
+                </div>
+            </div>
+            <div class="cs-preview-features">
+                <div class="cs-feature-pill">
+                    <span class="cs-feature-dot cs-feature-dot--green"></span>
+                    Trends
+                </div>
+                <div class="cs-feature-pill">
+                    <span class="cs-feature-dot cs-feature-dot--amber"></span>
+                    Comparisons
+                </div>
+                <div class="cs-feature-pill">
+                    <span class="cs-feature-dot cs-feature-dot--purple"></span>
+                    Forecasts
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
