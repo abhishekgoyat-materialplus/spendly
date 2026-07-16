@@ -208,7 +208,9 @@ def _parse_expense_form():
             error = "Date must be in YYYY-MM-DD format."
         else:
             try:
-                datetime.strptime(date_raw, "%Y-%m-%d")
+                parsed_date = datetime.strptime(date_raw, "%Y-%m-%d").date()
+                if parsed_date > datetime.today().date():
+                    error = "Date cannot be in the future."
             except ValueError:
                 error = "Date must be in YYYY-MM-DD format."
 
@@ -221,8 +223,12 @@ def _parse_expense_form():
 @app.route("/expenses/add", methods=["GET", "POST"])
 @login_required
 def add_expense():
+    today = datetime.today().strftime("%Y-%m-%d")
+
     if request.method == "GET":
-        return render_template("add_expense.html", categories=VALID_CATEGORIES)
+        return render_template(
+            "add_expense.html", categories=VALID_CATEGORIES, today=today
+        )
 
     amount_raw, amount, category, date_raw, description, error = _parse_expense_form()
 
@@ -230,6 +236,7 @@ def add_expense():
         return render_template(
             "add_expense.html",
             categories=VALID_CATEGORIES,
+            today=today,
             error=error,
             amount=amount_raw,
             category=category,
@@ -249,11 +256,14 @@ def edit_expense(id):
     if expense is None:
         abort(404)
 
+    today = datetime.today().strftime("%Y-%m-%d")
+
     if request.method == "GET":
         return render_template(
             "edit_expense.html",
             expense=expense,
             categories=VALID_CATEGORIES,
+            today=today,
             amount=expense["amount"],
             category=expense["category"],
             date=expense["date"],
@@ -268,6 +278,7 @@ def edit_expense(id):
             error=error,
             expense=expense,
             categories=VALID_CATEGORIES,
+            today=today,
             amount=amount_raw,
             category=category,
             date=date_raw,
