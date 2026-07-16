@@ -1,0 +1,7 @@
+[deploy]
+startCommand = "gunicorn app:app"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+
+[build]
+builder = "nixpacks"
