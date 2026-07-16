@@ -563,7 +563,7 @@ class TestPostEditExpenseHappyPath:
             data={
                 "amount": "99.99",
                 "category": "Transport",
-                "date": "2026-08-01",
+                "date": "2026-07-01",
                 "description": "Updated description",
             },
         )
@@ -588,7 +588,7 @@ class TestPostEditExpenseHappyPath:
             data={
                 "amount": "123.45",
                 "category": "Bills",
-                "date": "2026-09-10",
+                "date": "2026-07-05",
                 "description": "New description after edit",
             },
         )
@@ -609,8 +609,8 @@ class TestPostEditExpenseHappyPath:
             row["category"] == "Bills"
         ), f"Expected category='Bills' after edit, got {row['category']!r}"
         assert (
-            row["date"] == "2026-09-10"
-        ), f"Expected date='2026-09-10' after edit, got {row['date']!r}"
+            row["date"] == "2026-07-05"
+        ), f"Expected date='2026-07-05' after edit, got {row['date']!r}"
         assert (
             row["description"] == "New description after edit"
         ), f"Expected updated description in DB, got {row['description']!r}"
@@ -626,7 +626,7 @@ class TestPostEditExpenseHappyPath:
             data={
                 "amount": "50.00",
                 "category": "Health",
-                "date": "2026-07-20",
+                "date": "2026-07-10",
                 "description": "Checkup",
             },
         )
